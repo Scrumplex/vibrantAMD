@@ -1,4 +1,4 @@
-# Vibrant Linux
+# vibrantLinux AMD
 
 Main Program:
 
@@ -8,40 +8,57 @@ Program entry editor:
 
 ![Program vibrance editor](assets/entryeditor.png)
 
-vibrant linux is a gui tool that serves the same purpose as vibrance gui on windows.
+vibrantLinux is a graphical tool that serves the same purpose as VibranceGUI on Windows.
 
-It currently only supports nvidia as I have yet to find a way to tweak saturation/vibrance on amd, and intel gpus. If you find a way to adjust saturation/vibrace on amd, intel, or any other gpu brand that I never heard of please create an issue with the method of how to adjust saturation and it will be added to the program.
+This fork of vibrantLinux only supports AMD cards.
 
-Trust me, I'm more digusted with myself than anyone could be for writing software that only supports nvidia.
+There are plans to upstream the changes into vibrantLinux once this was tested on more hardware and polished.
 
+# Compatibility
+Works with
+ - AMD Radeon Vega 56
+   - GIGABYTE RX Vega 56 GAMING OC 8G
+ - Or more? Tell me!
 # Requirements
 
 The only things needed to run this program is:
 
 ```
 git
-nvidia-settings
+vibrantx
 qt
 libxcb (optional)
 libxcb-ewmh (optional)
 ```
 
+vibrantX is a CLI tool written by me that allows easy adjustments to color vibrance. See [vibrantX Project Page](https://gitlab.com/Scrumplex/vibrantx)
+
 # Installation
+## AUR
+vibrantLinux AMD and vibrantX are both available on the AUR. Check it out [here](https://aur.archlinux.org/packages/vibrantlinux-amd-git/).
+
+## Compile yourself
+After installing the requirements including vibrantX (See above) you can build vibrantLinux.
 
 ```
-git clone https://gitlab.com/zee220/vibrantlinux
-cd vibrantlinux
+git clone https://github.com/Scrumplex/vibrantLinux-AMD.git
+cd vibrantLinux-AMD
 ./update.sh
 #or alternatively if you know you don't want to use ewmh to get the active window
 ./update.sh --noxcb
 ```
+# Roadmap
+ - Implement reading current saturation / vibrance from X11 (Probably going to land in vibrantX)
+ - Merge AMD and NVIDIA implementation
+ - Upstream the changes to vibrantLinux (blocked by task above)
+ - Wayland?
 
-# Updates
+# FAQ
 
-Head to your installation folder and run
-```
-./update.sh
-#or for no xcb
-./update.sh --noxcb
-```
+## Q: Why is vibrantX hosted on GitLab and this on GitHub?
+As I plan to bring these changes upstream it is easier to work on vibrantLinux on GitHub as this is the platform of choice of upstream. I personally prefer GitLab which is why vibrantX is on GitLab instead.
+
+## Q: Does this work on my card?
+You tell me! I can only say that it apparently works on AMD GPUs. It could work on Intel if the driver implements the so called "CTM" property
+
 
