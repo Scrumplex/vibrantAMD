@@ -66,12 +66,12 @@ public:
 		return name == other.name;
 	}
 
-	void applyVibrance(int vibrance);
+    void applyVibrance(double vibrance);
 
 	//gets a list of all of the display names from nvidia-settings
 	static QStringList getDisplayNames();
 	//gets the vibrance of the display @name from nvidia-settings
-	static int getNvidiaSettingsVibrance(const QString &name);
+    static int getNvidiaSettingsVibrance(const QString &name);
 
 	//get the default vibrance level to apply when no program in our watchlist is running
 	int getDefaultVibrance();
@@ -93,7 +93,7 @@ private:
 	QString name;
 	//set it outside of range so the first call to applyVibrance always works
 	//this is the currently applied vibrance
-	int currentVibrance;
+    double currentVibrance;
 };
 
 #endif // DISPLAYTAB_H

@@ -1,4 +1,5 @@
 #include "displaytab.h"
+#include <QDebug>
 
 displayTab::displayTab(QString name, QWidget *parent, bool getVibrance) : QWidget(parent), name(name){
 	makeTab();
@@ -48,7 +49,7 @@ void displayTab::makeTab(){
 		delete label;
 		throw std::runtime_error("failed to allocate memory for slider");
 	}
-	slider->setRange(-1024, 1023);
+    slider->setRange(0, 400);
 
 	spinBox = new (std::nothrow) QSpinBox(this);
 	if(!spinBox){
@@ -56,7 +57,7 @@ void displayTab::makeTab(){
 		delete slider;
 		throw std::runtime_error("failed to allocate memory for spinbox");
 	}
-	spinBox->setRange(-1024, 1023);
+    spinBox->setRange(0, 400);
 
 	layout = new (std::nothrow) QGridLayout();
 	if(!layout){
@@ -75,59 +76,39 @@ void displayTab::makeTab(){
 	connect(slider, &QSlider::valueChanged, spinBox, &QSpinBox::setValue);
 }
 
-void displayTab::applyVibrance(int vibrance){
-	QString nvidiaCall = "nvidia-settings -a ["+name+"]";
-	nvidiaCall += "/DigitalVibrance="+QString::number(vibrance);
-	system(nvidiaCall.toUtf8());
+void displayTab::applyVibrance(double vibrance){
+    QString vibrantXCall = "vibrantX " + QString::number(vibrance / 100.0) + " " + name;
+    system(vibrantXCall.toUtf8());
 	currentVibrance = vibrance;
 }
 
 QStringList displayTab::getDisplayNames(){
-	QStringList names;
+    QStringList names;
 
-	QProcess nvidia;
-	QProcess grep;
-	nvidia.setStandardOutputProcess(&grep);
-	nvidia.start("nvidia-settings -q dpys");
-	grep.start("grep connected");
-	grep.setProcessChannelMode(QProcess::ForwardedChannels);
-	nvidia.waitForFinished();
-	grep.waitForFinished();
+    QProcess xranndr;
+    xranndr.start("xrandr");
+    xranndr.waitForFinished();
 
-	/*
-	* The output should be in this format
-	* [0] HOSTNAME:0[dpy:NUMBER] (CONNECTION_NAME) (connected, enabled)
-	*/
-	QStringList res = QString(grep.readAll()).split("\n");
+    QStringList res = QString(xranndr.readAll()).split("\n");
 
-	for(int i = 0; i < res.size() - 1; i++){
-		/*im sorry i know this looks horrendous
-		splits the string on the first ( which will come right before CONNECTION_NAME
-		then splits it again at ) which results in the first element of the string list being CONNECTION_NAME*/
-		names.append(res[i].split("(")[1].split(")")[0]);
+    for(int i = 0; i < res.size(); i++){
+        QString str = res[i];
+        if (str.startsWith("Screen") || str.startsWith("   "))  // Skip Screen X lines and modes list
+            continue;
+        QStringList splits = str.split(" ");
+        if (splits.size() <= 2 || splits.at(1) != "connected")
+            continue;
+
+        names.append(splits.at(0));
 	}
 
 	return names;
 }
 
 int displayTab::getNvidiaSettingsVibrance(const QString &name){
-	QProcess nvidia;
-	QProcess grep;
-	nvidia.setStandardOutputProcess(&grep);
-	nvidia.start("nvidia-settings -q [" + name + "]/DigitalVibrance");
-	nvidia.waitForFinished();
-	grep.start("grep dpy");
-	grep.waitForFinished();
+    // TODO parse CTMs from xrandr --props
 
-	/*
-	* The output should be in this format
-	* Attribute 'DigitalVibrance' (HOSTNAME:0[dpy:NUMBER]): 0.
-	*/
-
-	QString res = grep.readAllStandardOutput().split(' ').last();
-	//remove the period at the end
-	res.resize(res.size()-1);
-	return res.toInt();
+    return 100;
 }
 
 int displayTab::getDefaultVibrance(){
