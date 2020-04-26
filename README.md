@@ -16,8 +16,10 @@ There are plans to upstream the changes into vibrantLinux once this was tested o
 
 # Compatibility
 Works with
- - AMD Radeon Vega 56
-   - GIGABYTE RX Vega 56 GAMING OC 8G
+ - AMD
+   - Radeon RX 5600 XT
+   - Radeon RX Vega 56
+   - Radeon RX 580
  - Or more? Tell me!
 # Requirements
 
