@@ -17,9 +17,12 @@ There are plans to upstream the changes into vibrantLinux once this was tested o
 # Compatibility
 Works with
  - AMD
+   - Radeon RX 5700 XT
    - Radeon RX 5600 XT
+   - Radeon VII
    - Radeon RX Vega 56
    - Radeon RX 580
+   - Radeon RX 470
  - Or more? Tell me!
 # Requirements
 
