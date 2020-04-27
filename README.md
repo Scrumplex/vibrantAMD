@@ -23,7 +23,14 @@ Works with
    - Radeon RX Vega 56
    - Radeon RX 580
    - Radeon RX 470
+   - Radeon R9 270<sup>[1]</sup><sup>[2]</sup>
  - Or more? Tell me!
+
+
+\[1]: Requires manually enabling AMD DC: See [ArchWiki](https://wiki.archlinux.org/index.php/AMDGPU#R9_390_series_poor_performance_and/or_instability)
+
+\[2]: (Possibly) requires manually setting `amdgpu.force_asic_type=1` in Kernel command line
+
 # Requirements
 
 The only things needed to run this program is:
