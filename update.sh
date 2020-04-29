@@ -8,6 +8,8 @@ for arg in "$@"; do
 	fi
 done
 
+echo "WARNING: This version of vibrantLinux-AMD requires the latest revision of vibrantX as of 29. Apr 2020"
+
 git reset --hard
 git pull
 
@@ -18,6 +20,3 @@ else
 fi
 
 make
-rm -r include forms src *.o *.h *.cpp *.pro* Makefile LICENSE README.md \
-assets/ resources.qrc
-

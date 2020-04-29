@@ -77,7 +77,7 @@ void displayTab::makeTab(){
 }
 
 void displayTab::applyVibrance(double vibrance){
-    QString vibrantXCall = "vibrantX " + QString::number(vibrance / 100.0) + " " + name;
+    QString vibrantXCall = "vibrantX " + name + " " + QString::number(vibrance / 100.0);
     system(vibrantXCall.toUtf8());
 	currentVibrance = vibrance;
 }
@@ -85,11 +85,11 @@ void displayTab::applyVibrance(double vibrance){
 QStringList displayTab::getDisplayNames(){
     QStringList names;
 
-    QProcess xranndr;
-    xranndr.start("xrandr");
-    xranndr.waitForFinished();
+    QProcess xrandr;
+    xrandr.start("xrandr");
+    xrandr.waitForFinished();
 
-    QStringList res = QString(xranndr.readAll()).split("\n");
+    QStringList res = QString(xrandr.readAll()).split("\n");
 
     for(int i = 0; i < res.size(); i++){
         QString str = res[i];
@@ -106,9 +106,21 @@ QStringList displayTab::getDisplayNames(){
 }
 
 int displayTab::getNvidiaSettingsVibrance(const QString &name){
-    // TODO parse CTMs from xrandr --props
+    QProcess vibrantXCall;
+    vibrantXCall.start("vibrantX " + name);
+    vibrantXCall.waitForFinished();
 
-    return 100;
+    QStringList res = QString(vibrantXCall.readAll()).split("\n");
+
+    QString lastLine = res[res.size() - 2];  // the very last line is actually empty
+    QStringList splits = lastLine.split(": ");
+    if (splits.size() > 1) {
+        double d = splits.last().toDouble();
+        int rounded = qRound(d * 100);
+        return rounded;
+    } else {
+        return 100;
+    }
 }
 
 int displayTab::getDefaultVibrance(){
